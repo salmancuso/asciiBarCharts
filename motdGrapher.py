@@ -110,12 +110,12 @@ def createMotdFile():
     motdFile = open('/etc/motd', 'w')
     motdFile.write(additionalMOTDmessage())
     motdFile.write("\n\n")
-    motdFile.write("----------------------------- Current {} Usage -----------------------------".format("Test Server"))
+    motdFile.write("----------------------------- Current {} Usage -----------------------------".format("Server"))
     motdFile.write("\n")
     motdFile.write("""{0:8}{1:<35}{2:6}{3:15}""".format("TIME", "********** CPU Usage **********", "", "********** MEM Usage **********"))
     motdFile.write("\n")
     print("\n\n")
-    print("----------------------------- Current {} Usage -----------------------------".format("Test Server"))
+    print("----------------------------- Current {} Usage -----------------------------".format("Server"))
     print("""{0:8}{1:<35}{2:6}{3:15}""".format("TIME", "********** CPU Usage **********", "", "********** MEM Usage **********"))
 
 ###############################################################
