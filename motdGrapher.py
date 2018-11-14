@@ -13,6 +13,16 @@ import re
 import psutil
 import calendar
 import time
+import subprocess
+
+
+###############################################################
+#### CAPTURE THE CURRENT WORKING DIRECTORY NAME
+###############################################################
+def getCurrentWorkingDir():
+    hostname = subprocess.check_output(['hostname']).decode('utf-8')
+    hostname = str(hostname[:4]).replace(" ", "")
+    return hostname
 
 
 ###############################################################
@@ -107,15 +117,16 @@ def getLastTenMeasures():
 #### FOR THE CHARTS
 ###############################################################
 def createMotdFile():
-    motdFile = open('/etc/motd', 'w')
-    motdFile.write(additionalMOTDmessage())
+    cwd = str(getCurrentWorkingDir())
+    motdFile = open('/ifs/admin/bin/motdAscii/asciiCharts/{}.txt'.format(cwd), 'w')
+    ## motdFile.write(str(additionalMOTDmessage()))
     motdFile.write("\n\n")
-    motdFile.write("----------------------------- Current {} Usage -----------------------------".format("Server"))
+    motdFile.write("------------------------------ Current {} Usage ------------------------------".format(cwd.upper()))
     motdFile.write("\n")
     motdFile.write("""{0:8}{1:<35}{2:6}{3:15}""".format("TIME", "********** CPU Usage **********", "", "********** MEM Usage **********"))
     motdFile.write("\n")
     print("\n\n")
-    print("----------------------------- Current {} Usage -----------------------------".format("Server"))
+    print("------------------------------ Current {} Usage ------------------------------".format(cwd.upper()))
     print("""{0:8}{1:<35}{2:6}{3:15}""".format("TIME", "********** CPU Usage **********", "", "********** MEM Usage **********"))
 
 ###############################################################
@@ -123,7 +134,8 @@ def createMotdFile():
 #### MUST HAVE ROOT ACCESS TO DO THIS FUNCTION ROOT!!!!!!
 ###############################################################    
 def appendMotdFile(writeThisLine):
-    motdFile = open('/etc/motd', 'a')
+    cwd = str(getCurrentWorkingDir())
+    motdFile = open('/ifs/admin/bin/motdAscii/asciiCharts/{}.txt'.format(cwd), 'a')
     motdFile.write(writeThisLine)
     motdFile.write("\n")
 
@@ -133,10 +145,9 @@ def appendMotdFile(writeThisLine):
 ##############################################################################################################################
 ##############################################################################################################################
 if __name__ == "__main__":
-    additionalMOTDmessage()
-
     #### DECLARE DATABASE FILEPATH AND NAME
-    databaseName = "./motdSystemData.dat"
+    
+    databaseName = "./{}.dat".format(getCurrentWorkingDir())
     createTable(databaseName)
 
     #### GET CPU PERCENTAGE
@@ -180,5 +191,3 @@ if __name__ == "__main__":
         memUse = int(systemUsage[UID][2] * 100)
         timeStamp = str(systemUsage[UID][0])
         makeChart(timeStamp, cpuUse, memUse, cpuPercent, memPercent)
-
-
